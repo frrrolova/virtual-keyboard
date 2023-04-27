@@ -20,12 +20,17 @@
   box-shadow: 1px 8px 9px 8px rgba(196, 200, 204, 0.2);
 
   &__key {
-    width: 50px;
     height: 50px;
     border: none;
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.4);
     color: rgb(116, 116, 116);
+    margin: 3px;
+    cursor: pointer;
+
+    &_small {
+      width: 50px;
+    }
 
     &_big {
       width: 100px;
