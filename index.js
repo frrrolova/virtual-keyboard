@@ -1,25 +1,28 @@
 const Keyboard = {
 
   keysWrapper: null,
+  textField: null,
   engKeysLayout: [[
-    { symbol: '7', size: 'small' },
-    { symbol: '8', size: 'small' },
-    { symbol: '9', size: 'small' },
-    { symbol: '0', size: 'small' },
-    { symbol: '-', size: 'small' },
-    { symbol: '=', size: 'small' },
-    { symbol: 'backspace', size: 'big' }
+    { symbol: '7', size: 'small', keyCode: 55 },
+    { symbol: '8', size: 'small', keyCode: 56 },
+    { symbol: '9', size: 'small', keyCode: 57 },
+    { symbol: '0', size: 'small', keyCode: 48 },
+    { symbol: '-', size: 'small', keyCode: 189 },
+    { symbol: '=', size: 'small', keyCode: 187 },
+    { symbol: 'backspace', size: 'big', keyCode: 8 }
   ]],
 
   init: function () {
     this.drawBasicLayout();
     this.drawKeys();
+    this.initKeyboardEventListeners();
   },
 
   drawBasicLayout: function () {
     let container = document.createElement('div');
     let title = document.createElement('h1');
     let textarea = document.createElement('textarea');
+    this.textField = textarea;
     let keyboard = document.createElement('div');
     let wrapper = document.createElement('div');
     this.keysWrapper = wrapper;
@@ -62,6 +65,30 @@ const Keyboard = {
         row.append(key);
       })
     })
+  },
+
+  initKeyboardEventListeners: function () {
+
+    document.body.addEventListener(
+      'keydown',
+      (event) => {
+        this.textField.focus();
+        this.engKeysLayout.forEach((item) => {
+          const pressedKey = item.find((letter) => event.keyCode === letter.keyCode);
+          pressedKey.keyElement.classList.add("keyboard__key_pressed");
+        })
+      }
+    )
+
+    this.textField.addEventListener(
+      'keyup',
+      (event) => {
+        this.engKeysLayout.forEach((item) => {
+          const pressedKey = item.find((letter) => event.keyCode === letter.keyCode);
+          pressedKey.keyElement.classList.remove("keyboard__key_pressed");
+        })
+      }
+    )
   }
 };
 
