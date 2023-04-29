@@ -8,6 +8,10 @@
   color: rgb(5, 70, 5);
 }
 
+.textarea {
+  outline: none;
+}
+
 .keyboard {
   position: fixed;
   bottom: 0;
@@ -21,6 +25,7 @@
 
   &__key {
     height: 50px;
+    box-sizing: border-box;
     border: none;
     border-radius: 5px;
     background-color: rgba(255, 255, 255, 0.4);
@@ -43,6 +48,11 @@
     &_pressed {
       background-color: rgba(255, 255, 255, 0.8);
     }
+
+    &_caps {
+      border: 3px solid rgb(45, 248, 45);
+    }
+
   }
 
 }

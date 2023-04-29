@@ -2,14 +2,30 @@ const Keyboard = {
 
   keysWrapper: null,
   textField: null,
+  caps: false,
   engKeysLayout: [[
-    { symbol: '7', size: 'small', keyCode: 55 },
-    { symbol: '8', size: 'small', keyCode: 56 },
-    { symbol: '9', size: 'small', keyCode: 57 },
-    { symbol: '0', size: 'small', keyCode: 48 },
-    { symbol: '-', size: 'small', keyCode: 189 },
-    { symbol: '=', size: 'small', keyCode: 187 },
-    { symbol: 'backspace', size: 'big', keyCode: 8 }
+    { symbol: '7', size: 'small', keyCode: 55, keyElement: null },
+    { symbol: '8', size: 'small', keyCode: 56, keyElement: null },
+    { symbol: '9', size: 'small', keyCode: 57, keyElement: null },
+    { symbol: '0', size: 'small', keyCode: 48, keyElement: null },
+    { symbol: '-', size: 'small', keyCode: 189, keyElement: null },
+    { symbol: '=', size: 'small', keyCode: 187, keyElement: null },
+    { symbol: 'Backspace', size: 'big', keyCode: 8, keyElement: null }
+  ], [
+    { symbol: 'Tab', size: 'big', keyCode: 9, keyElement: null },
+    { symbol: 'Q', size: 'small', keyCode: 81, keyElement: null },
+    { symbol: 'Del', size: 'big', keyCode: 46, keyElement: null }
+  ], [
+    { symbol: 'Caps', size: 'big', keyCode: 20, keyElement: null },
+    { symbol: 'Enter', size: 'big', keyCode: 13, keyElement: null }
+  ], [
+    { symbol: 'Shift', size: 'big', keyCode: 16, keyElement: null },
+    { symbol: '⇧', size: 'small', keyCode: 17, keyElement: null },
+  ], [
+    { symbol: 'Ctrl', size: 'big', keyCode: 17, keyElement: null },
+    { symbol: '⇦', size: 'small', keyCode: 17, keyElement: null },
+    { symbol:  '⇩', size: 'small', keyCode: 17, keyElement: null },
+    { symbol:  '⇨', size: 'small', keyCode: 17, keyElement: null }
   ]],
 
   init: function () {
@@ -62,6 +78,61 @@ const Keyboard = {
         key.textContent = letter.symbol;
         letter.keyElement = key;
 
+        key.addEventListener(
+          'mousedown',
+          (event) => {
+            letter.keyElement.classList.add("keyboard__key_pressed");
+
+            if (letter.keyCode === 8) {  //backspace
+
+              if (this.textField.selectionStart === this.textField.value.length || this.textField.selectionStart === this.textField.selectionEnd) {
+
+                this.textField.value = this.textField.value.substring(0, this.textField.selectionStart - 1) + this.textField.value.substring(this.textField.selectionEnd, this.textField.value.length);
+
+              }
+
+              this.textField.value = this.textField.value.substring(0, this.textField.selectionStart) + this.textField.value.substring(this.textField.selectionEnd, this.textField.value.length);
+            }
+
+            else if (letter.keyCode === 46) { //delete
+
+              if (this.textField.selectionStart === this.textField.selectionEnd) {
+
+                this.textField.value = this.textField.value.substring(0, this.textField.selectionStart) + this.textField.value.substring(this.textField.selectionEnd + 1, this.textField.value.length);
+              }
+
+              this.textField.value = this.textField.value.substring(0, this.textField.selectionStart) + this.textField.value.substring(this.textField.selectionEnd, this.textField.value.length);
+            }
+
+            else if (letter.keyCode === 13) { //enter
+
+              this.textField.value = this.textField.value.substring(0, this.textField.selectionStart) + '\n' + this.textField.value.substring(this.textField.selectionEnd, this.textField.value.length);
+
+            }
+
+            else if (letter.keyCode === 20) { //caps
+
+              this.caps = !this.caps;
+
+              key.classList.toggle("keyboard__key_caps");
+
+            } else {
+
+              this.textField.value = this.textField.value.substring(0, this.textField.selectionStart) + (this.caps ? letter.symbol : letter.symbol.toLowerCase()) + this.textField.value.substring(this.textField.selectionEnd, this.textField.value.length);
+
+            }
+
+          }
+        )
+
+        key.addEventListener(
+          'mouseup',
+          (event) => {
+            letter.keyElement.classList.remove("keyboard__key_pressed");
+            this.textField.focus();
+          }
+        )
+
         row.append(key);
       })
     })
@@ -69,23 +140,23 @@ const Keyboard = {
 
   initKeyboardEventListeners: function () {
 
-    document.body.addEventListener(
+    window.addEventListener(
       'keydown',
       (event) => {
         this.textField.focus();
         this.engKeysLayout.forEach((item) => {
           const pressedKey = item.find((letter) => event.keyCode === letter.keyCode);
-          pressedKey.keyElement.classList.add("keyboard__key_pressed");
+            pressedKey?.keyElement.classList.add("keyboard__key_pressed"); //добавит класс, если есть pressedKey
         })
       }
     )
 
-    this.textField.addEventListener(
+    window.addEventListener(
       'keyup',
       (event) => {
         this.engKeysLayout.forEach((item) => {
           const pressedKey = item.find((letter) => event.keyCode === letter.keyCode);
-          pressedKey.keyElement.classList.remove("keyboard__key_pressed");
+          pressedKey?.keyElement.classList.remove("keyboard__key_pressed");
         })
       }
     )
