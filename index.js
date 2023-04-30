@@ -4,7 +4,7 @@ const Keyboard = {
   textField: null,
   caps: false,
   lang: 'en',
-  engKeysLayout: [[
+  keysLayout: [[
     { symbol: '`', size: 'small', keyCode: 192, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
     { symbol: '1', size: 'small', keyCode: 49, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
     { symbol: '2', size: 'small', keyCode: 50, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
@@ -110,7 +110,7 @@ const Keyboard = {
   },
 
   drawKeys: function () {
-    this.engKeysLayout.forEach((item) => {
+    this.keysLayout.forEach((item) => {
 
       let row = document.createElement('div');
       row.classList.add("keyboard__row");
@@ -163,20 +163,35 @@ const Keyboard = {
     window.addEventListener(
       'keydown',
       (event) => {
-        this.engKeysLayout.forEach((item) => {
+        event.preventDefault();
+        for (let i = 0; i < this.keysLayout.length; i++) {
+          const item = this.keysLayout[i];
+
           const pressedKey = item.find((letter) => event.keyCode === letter.keyCode);
-            pressedKey?.keyElement.classList.add("keyboard__key_pressed"); //добавит класс, если есть pressedKey
-        })
+
+          if (pressedKey) {
+            pressedKey.keyElement.classList.add("keyboard__key_pressed");
+            pressedKey.action(this, pressedKey);
+            break;
+          }
+        }
       }
     )
 
     window.addEventListener(
       'keyup',
       (event) => {
-        this.engKeysLayout.forEach((item) => {
+        event.preventDefault();
+        for (let i = 0; i < this.keysLayout.length; i++) {
+          const item = this.keysLayout[i];
+
           const pressedKey = item.find((letter) => event.keyCode === letter.keyCode);
-          pressedKey?.keyElement.classList.remove("keyboard__key_pressed");
-        })
+          if (pressedKey) {
+            pressedKey.keyElement.classList.remove("keyboard__key_pressed");
+            break;
+          }
+        }
+
       }
     )
   },
@@ -184,6 +199,10 @@ const Keyboard = {
   backspaceHandler: function () {
     let start = this.textField.selectionStart;
     let end = this.textField.selectionEnd;
+
+    if (start === 0 && end === 0) {
+      return;
+    }
 
     if (start === this.textField.value.length || start === end) {
 
