@@ -19,13 +19,13 @@ const Keyboard = {
     { symbol: 'Caps', size: 'big', keyCode: 20, keyElement: null },
     { symbol: 'Enter', size: 'big', keyCode: 13, keyElement: null }
   ], [
-    { symbol: 'Shift', size: 'big', keyCode: 16, keyElement: null },
-    { symbol: '⇧', size: 'small', keyCode: 17, keyElement: null },
+    { symbol: 'Shift', size: 'big', keyCode: 16, keyElement: null, side: left },
+    { symbol: '⇧', size: 'small', keyCode: 38, keyElement: null },
   ], [
-    { symbol: 'Ctrl', size: 'big', keyCode: 17, keyElement: null },
-    { symbol: '⇦', size: 'small', keyCode: 17, keyElement: null },
-    { symbol:  '⇩', size: 'small', keyCode: 17, keyElement: null },
-    { symbol:  '⇨', size: 'small', keyCode: 17, keyElement: null }
+    { symbol: 'Ctrl', size: 'big', keyCode: 17, keyElement: null, side: left },
+    { symbol: '⇦', size: 'small', keyCode: 37, keyElement: null },
+    { symbol:  '⇩', size: 'small', keyCode: 40, keyElement: null },
+    { symbol:  '⇨', size: 'small', keyCode: 39, keyElement: null }
   ]],
 
   init: function () {
@@ -81,55 +81,86 @@ const Keyboard = {
         key.addEventListener(
           'mousedown',
           (event) => {
+            event.preventDefault();
             letter.keyElement.classList.add("keyboard__key_pressed");
+            let start = this.textField.selectionStart;
+            let end = this.textField.selectionEnd;
 
-            if (letter.keyCode === 8) {  //backspace
+            //backspace
 
-              if (this.textField.selectionStart === this.textField.value.length || this.textField.selectionStart === this.textField.selectionEnd) {
+            if (letter.keyCode === 8) {
 
-                this.textField.value = this.textField.value.substring(0, this.textField.selectionStart - 1) + this.textField.value.substring(this.textField.selectionEnd, this.textField.value.length);
+              if (start === this.textField.value.length || start === end) {
 
+                this.textField.value = this.textField.value.substring(0, start - 1) + this.textField.value.substring(end, this.textField.value.length);
+
+                this.textField.setSelectionRange(start - 1, end - 1);
+
+              } else {
+
+                this.textField.value = this.textField.value.substring(0, start) + this.textField.value.substring(end, this.textField.value.length);
+
+                this.textField.setSelectionRange(start, start);
               }
 
-              this.textField.value = this.textField.value.substring(0, this.textField.selectionStart) + this.textField.value.substring(this.textField.selectionEnd, this.textField.value.length);
-            }
+            //delete
 
-            else if (letter.keyCode === 46) { //delete
+            } else if (letter.keyCode === 46) {
 
-              if (this.textField.selectionStart === this.textField.selectionEnd) {
+              if (start === end) {
 
-                this.textField.value = this.textField.value.substring(0, this.textField.selectionStart) + this.textField.value.substring(this.textField.selectionEnd + 1, this.textField.value.length);
+                this.textField.value = this.textField.value.substring(0, start) + this.textField.value.substring(end + 1, this.textField.value.length);
               }
 
-              this.textField.value = this.textField.value.substring(0, this.textField.selectionStart) + this.textField.value.substring(this.textField.selectionEnd, this.textField.value.length);
-            }
+              this.textField.value = this.textField.value.substring(0, start) + this.textField.value.substring(end, this.textField.value.length);
 
-            else if (letter.keyCode === 13) { //enter
+              this.textField.setSelectionRange(start, start);
 
-              this.textField.value = this.textField.value.substring(0, this.textField.selectionStart) + '\n' + this.textField.value.substring(this.textField.selectionEnd, this.textField.value.length);
+            //enter
 
-            }
+            } else if (letter.keyCode === 13) {
 
-            else if (letter.keyCode === 20) { //caps
+              this.textField.value = this.textField.value.substring(0, start) + '\n' + this.textField.value.substring(end, this.textField.value.length);
+
+              this.textField.setSelectionRange(start + 1, start + 1);
+
+            //caps
+
+            } else if (letter.keyCode === 20) {
 
               this.caps = !this.caps;
 
               key.classList.toggle("keyboard__key_caps");
 
+            //left
+
+            } else if (letter.keyCode === 37) {
+
+              this.textField.setSelectionRange(start - 1, start - 1);
+
+            //right
+
+            } else if (letter.keyCode === 39) {
+
+              this.textField.setSelectionRange(start + 1, start + 1);
+
             } else {
 
-              this.textField.value = this.textField.value.substring(0, this.textField.selectionStart) + (this.caps ? letter.symbol : letter.symbol.toLowerCase()) + this.textField.value.substring(this.textField.selectionEnd, this.textField.value.length);
+              this.textField.value = this.textField.value.substring(0, start) + (this.caps ? letter.symbol : letter.symbol.toLowerCase()) + this.textField.value.substring(end, this.textField.value.length);
+              this.textField.setSelectionRange(start + 1, start + 1);
+
+
 
             }
-
+            // this.textField.focus();
           }
+
         )
 
         key.addEventListener(
           'mouseup',
           (event) => {
             letter.keyElement.classList.remove("keyboard__key_pressed");
-            this.textField.focus();
           }
         )
 
@@ -143,7 +174,7 @@ const Keyboard = {
     window.addEventListener(
       'keydown',
       (event) => {
-        this.textField.focus();
+        // this.textField.focus();
         this.engKeysLayout.forEach((item) => {
           const pressedKey = item.find((letter) => event.keyCode === letter.keyCode);
             pressedKey?.keyElement.classList.add("keyboard__key_pressed"); //добавит класс, если есть pressedKey
