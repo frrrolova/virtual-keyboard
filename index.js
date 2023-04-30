@@ -4,8 +4,12 @@ const Keyboard = {
   textField: null,
   caps: false,
   shift: false,
+  ctrl: false,
+  alt: false,
   specialSymbol: '',
   lang: 'en',
+  downTimerId: null,
+  upTimerId: null,
   keysLayout: [
     [
       {
@@ -406,13 +410,21 @@ const Keyboard = {
         size: 'big',
         keyCode: 'ControlLeft',
         keyElement: null,
-        side: 'left'
+        side: 'left',
+        downAction: (keyboard, key) => keyboard.ctrlHandler.call(keyboard, key),
+        upAction: (keyboard, key) => keyboard.ctrlHandler.call(keyboard, key),
+        dobleClickAction: (keyboard, key) => keyboard.ctrlHandler.call(keyboard, key)
       },
       {
         symbol: 'Alt',
         size: 'big',
         keyCode: 'AltLeft',
-        keyElement: null, side: 'left' },
+        keyElement: null,
+        side: 'left',
+        downAction: (keyboard, key) => keyboard.altHandler.call(keyboard, key),
+        upAction: (keyboard, key) => keyboard.altHandler.call(keyboard, key),
+        dobleClickAction: (keyboard, key) => keyboard.altHandler.call(keyboard, key)
+      },
       {
         symbol: {ru: {main: ' ', alt: ' '}, en: {main: ' ', alt: ' '}},
         size: 'extra-big',
@@ -504,9 +516,20 @@ const Keyboard = {
           'mousedown',
           (event) => {
             event.preventDefault();
-            keyObject.keyElement.classList.add("keyboard__key_pressed");
+            
+            if (this.downTimerId) {
+              clearTimeout(this.downTimerId);
+              this.downTimerId = null;
+            }
+            
+            
+            this.downTimerId = setTimeout(() => {
+              keyObject.keyElement.classList.add("keyboard__key_pressed");
 
-            keyObject.downAction(this, keyObject);
+              keyObject.downAction(this, keyObject);
+              this.downTimerId = null;
+            }, 300)
+
           }
 
         )
@@ -515,18 +538,27 @@ const Keyboard = {
           'mouseup',
           (event) => {
             event.preventDefault();
-            keyObject.keyElement.classList.remove("keyboard__key_pressed");
-            keyObject.upAction?.(this, keyObject);
+            if (this.upTimerId) {
+              clearTimeout(this.upTimerId);
+              this.upTimerId = null;
+            }
+
+            this.upTimerId = setTimeout(() => {
+              keyObject.keyElement.classList.remove("keyboard__key_pressed");
+              keyObject.upAction?.(this, keyObject);
+            }, 300);
+
+           
           }
         )
 
-        keyDomElement.addEventListener(
-          'dblclick',
-          (event) => {
-            keyObject.keyElement.classList.toggle("keyboard__key_pressed");
-            keyObject.dobleClickAction?.(this, keyObject);
-          }
-        )
+        // keyDomElement.addEventListener(
+        //   'dblclick',
+        //   (event) => {
+        //     keyObject.keyElement.classList.toggle("keyboard__key_pressed");
+        //     keyObject.dobleClickAction?.(this, keyObject);
+        //   }
+        // )
 
         row.append(keyDomElement);
       })
@@ -540,7 +572,7 @@ const Keyboard = {
       (event) => {
         event.preventDefault();
         // We press shift repeatedly
-        if (event.repeat && event.code === 16) {
+        if (event.repeat && (event.code === 'ShiftLeft' || event.code === 'ShiftRight')) {
           return;
         }
 
@@ -635,9 +667,29 @@ const Keyboard = {
 
   shiftHandler: function () {
 
-    // this.caps = !this.caps;
     this.shift = !this.shift;
     this.changeKeysTextcontent();
+  },
+
+  ctrlHandler: function () {
+    this.ctrl = !this.ctrl;
+
+    if (this.alt) {
+      this.lang === 'en' ? this.lang = 'ru' : this.lang = 'en';
+      this.changeKeysTextcontent();
+      this.ctrl = false;
+      this.alt = false;
+    }
+  },
+
+  altHandler: function () {
+    this.alt = !this.alt;
+    if (this.ctrl) {
+      this.lang === 'en' ? this.lang = 'ru' : this.lang = 'en';
+      this.changeKeysTextcontent();
+      this.ctrl = false;
+      this.alt = false;
+    }
   },
 
   tabHandler: function () {
@@ -700,7 +752,7 @@ const Keyboard = {
       return keyObject.symbol[this.lang].main;
 
     }
-    
+
   }
 };
 
