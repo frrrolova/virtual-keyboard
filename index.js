@@ -3,81 +3,444 @@ const Keyboard = {
   keysWrapper: null,
   textField: null,
   caps: false,
+  shift: false,
   specialSymbol: '',
-  lang: 'ru',
+  lang: 'en',
   keysLayout: [
     [
-      { symbol:  {ru: 'ё', en: '`'}, size: 'small', keyCode: 192, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '1', size: 'small', keyCode: 49, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '2', size: 'small', keyCode: 50, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '3', size: 'small', keyCode: 51, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '4', size: 'small', keyCode: 52, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '5', size: 'small', keyCode: 53, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '6', size: 'small', keyCode: 54, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '7', size: 'small', keyCode: 55, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '8', size: 'small', keyCode: 56, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '9', size: 'small', keyCode: 57, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '0', size: 'small', keyCode: 48, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '-', size: 'small', keyCode: 189, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '=', size: 'small', keyCode: 187, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'Backspace', size: 'big', keyCode: 8, keyElement: null, action: (keyboard) => keyboard.backspaceHandler() }
+      {
+        symbol: {ru: {main: 'ё', alt: 'Ё'}, en: {main: '`', alt: '~'}},
+        size: 'small',
+        keyCode: 192,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: '1', alt: '!'}, en: {main: '1', alt: '!'}},
+        size: 'small',
+        keyCode: 49,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: '2', alt: '"'}, en: {main: '2', alt: '@'}},
+        size: 'small',
+        keyCode: 50,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: '3', alt: '№'}, en: {main: '3', alt: '#'}},
+        size: 'small',
+        keyCode: 51,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: '4', alt: ';'}, en: {main: '4', alt: '$'}},
+        size: 'small',
+        keyCode: 52,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: '5', alt: '%'}, en: {main: '5', alt: '%'}},
+        size: 'small',
+        keyCode: 53,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: '6', alt: ':'}, en: {main: '6', alt: '^'}},
+        size: 'small',
+        keyCode: 54,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: '7', alt: '?'}, en: {main: '7', alt: '&'}},
+        size: 'small',
+        keyCode: 55,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: '8', alt: '*'}, en: {main: '8', alt: '*'}},
+        size: 'small',
+        keyCode: 56,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: '9', alt: '('}, en: {main: '9', alt: '('}},
+        size: 'small',
+        keyCode: 57,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: '0', alt: ')'}, en: {main: '0', alt: ')'}},
+        size: 'small',
+        keyCode: 48,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: '-', alt: '_'}, en: {main: '-', alt: '_'}},
+        size: 'small',
+        keyCode: 189,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: '=', alt: '+'}, en: {main: '=', alt: '+'}},
+        size: 'small',
+        keyCode: 187,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: 'Backspace',
+        size: 'big',
+        keyCode: 8,
+        keyElement: null,
+        downAction: (keyboard) => keyboard.backspaceHandler() }
     ],
     [
-      { symbol: 'Tab', size: 'big', keyCode: 9, keyElement: null, action: (keyboard) => keyboard.tabHandler() },
-      { symbol: 'q', size: 'small', keyCode: 81, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'w', size: 'small', keyCode: 87, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'e', size: 'small', keyCode: 69, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'r', size: 'small', keyCode: 82, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 't', size: 'small', keyCode: 84, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'y', size: 'small', keyCode: 89, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'u', size: 'small', keyCode: 85, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'i', size: 'small', keyCode: 73, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'o', size: 'small', keyCode: 79, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'p', size: 'small', keyCode: 80, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '[', size: 'small', keyCode: 219, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: ']', size: 'small', keyCode: 221, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '\\', size: 'small', keyCode: 220, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'Del', size: 'big', keyCode: 46, keyElement: null, action: (keyboard) => keyboard.deleteHandler() }
+      {
+        symbol: 'Tab',
+        size: 'big',
+        keyCode: 9,
+        keyElement: null,
+        downAction: (keyboard) => keyboard.tabHandler() },
+      {
+        symbol: {ru: {main: 'й', alt: 'Й'}, en: {main: 'q', alt: 'Q'}},
+        size: 'small',
+        keyCode: 81,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'ц', alt: 'Ц'}, en: {main: 'w', alt: 'W'}},
+        size: 'small',
+        keyCode: 87,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'у', alt: 'У'}, en: {main: 'e', alt: 'E'}},
+        size: 'small',
+        keyCode: 69,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'к', alt: 'К'}, en: {main: 'r', alt: 'R'}},
+        size: 'small',
+        keyCode: 82,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'е', alt: 'Е'}, en: {main: 't', alt: 'T'}},
+        size: 'small',
+        keyCode: 84,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'н', alt: 'Н'}, en: {main: 'y', alt: 'Y'}},
+        size: 'small',
+        keyCode: 89,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'г', alt: 'Г'}, en: {main: 'u', alt: 'U'}},
+        size: 'small',
+        keyCode: 85,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'ш', alt: 'Ш'}, en: {main: 'i', alt: 'I'}},
+        size: 'small',
+        keyCode: 73,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'щ', alt: 'Щ'}, en: {main: 'o', alt: 'O'}},
+        size: 'small',
+        keyCode: 79,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'з', alt: 'З'}, en: {main: 'p', alt: 'P'}},
+        size: 'small',
+        keyCode: 80,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'х', alt: 'Х'}, en: {main: '[', alt: '{'}},
+        size: 'small',
+        keyCode: 219,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'ъ', alt: 'Ъ'}, en: {main: ']', alt: '}'}},
+        size: 'small',
+        keyCode: 221,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: '\\', alt: '/'}, en: {main: '\\', alt: '|'}},
+        size: 'small',
+        keyCode: 220,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: 'Del',
+        size: 'big',
+        keyCode: 46,
+        keyElement: null,
+        downAction: (keyboard) => keyboard.deleteHandler() }
     ],
     [
-      { symbol: 'Caps', size: 'big', keyCode: 20, keyElement: null, action: (keyboard, key) => keyboard.capsHandler.call(keyboard, key) },
-      { symbol: {ru: 'ф', en: 'a'}, size: 'small', keyCode: 65, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 's', size: 'small', keyCode: 83, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'd', size: 'small', keyCode: 68, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'f', size: 'small', keyCode: 70, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'g', size: 'small', keyCode: 71, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'h', size: 'small', keyCode: 72, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'j', size: 'small', keyCode: 74, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'k', size: 'small', keyCode: 75, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'l', size: 'small', keyCode: 76, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: ';', size: 'small', keyCode: 186, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: `'`, size: 'small', keyCode: 222, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'Enter', size: 'big', keyCode: 13, keyElement: null, action: (keyboard) => keyboard.enterHandler() }
+      {
+        symbol: 'Caps',
+        size: 'big',
+        keyCode: 20,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.capsHandler.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'ф', alt: 'Ф'}, en: {main: 'a', alt: 'A'}},
+        size: 'small',
+        keyCode: 65,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'ы', alt: 'Ы'}, en: {main: 's', alt: 'S'}},
+        size: 'small',
+        keyCode: 83,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'в', alt: 'В'}, en: {main: 'd', alt: 'D'}},
+        size: 'small',
+        keyCode: 68,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'а', alt: 'А'}, en: {main: 'f', alt: 'F'}},
+        size: 'small',
+        keyCode: 70,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'п', alt: 'П'}, en: {main: 'g', alt: 'G'}},
+        size: 'small',
+        keyCode: 71,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'р', alt: 'Р'}, en: {main: 'h', alt: 'H'}},
+        size: 'small',
+        keyCode: 72,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'о', alt: 'О'}, en: {main: 'j', alt: 'J'}},
+        size: 'small',
+        keyCode: 74,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'л', alt: 'Л'}, en: {main: 'k', alt: 'K'}},
+        size: 'small',
+        keyCode: 75,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'д', alt: 'Д'}, en: {main: 'l', alt: 'L'}},
+        size: 'small',
+        keyCode: 76,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'ж', alt: 'Ж'}, en: {main: ';', alt: ':'}},
+        size: 'small',
+        keyCode: 186,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'э', alt: 'Э'}, en: {main: `'`, alt: '"'}},
+        size: 'small',
+        keyCode: 222,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: 'Enter',
+        size: 'big',
+        keyCode: 13,
+        keyElement: null,
+        downAction: (keyboard) => keyboard.enterHandler() }
     ],
     [
-      { symbol: 'Shift', size: 'big', keyCode: 16, keyElement: null, side: 'left' },
-      { symbol: 'z', size: 'small', keyCode: 90, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'x', size: 'small', keyCode: 88, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'c', size: 'small', keyCode: 67, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'v', size: 'small', keyCode: 86, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'b', size: 'small', keyCode: 66, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'n', size: 'small', keyCode: 78, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'm', size: 'small', keyCode: 77, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: ',', size: 'small', keyCode: 188, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '.', size: 'small', keyCode: 190, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '/', size: 'small', keyCode: 191, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: '⇧', size: 'small', keyCode: 38, keyElement: null },
-      { symbol: 'Shift', size: 'big', keyCode: 16, keyElement: null, side: 'right' }
+      {
+        symbol: 'Shift',
+        size: 'big',
+        keyCode: 16,
+        keyElement: null,
+        side: 'left',
+        downAction: (keyboard, key) => keyboard.shiftHandler.call(keyboard, key),
+        upAction: (keyboard, key) => keyboard.shiftHandler.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'я', alt: 'Я'}, en: {main: 'z', alt: 'Z'}},
+        size: 'small',
+        keyCode: 90,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'ч', alt: 'Ч'}, en: {main: 'x', alt: 'X'}},
+        size: 'small',
+        keyCode: 88,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'с', alt: 'С'}, en: {main: 'c', alt: 'C'}},
+        size: 'small',
+        keyCode: 67,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'м', alt: 'М'}, en: {main: 'v', alt: 'V'}},
+        size: 'small',
+        keyCode: 86,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'и', alt: 'И'}, en: {main: 'b', alt: 'B'}},
+        size: 'small',
+        keyCode: 66,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'т', alt: 'Т'}, en: {main: 'n', alt: 'N'}},
+        size: 'small',
+        keyCode: 78,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'ь', alt: 'Ь'}, en: {main: 'm', alt: 'M'}},
+        size: 'small',
+        keyCode: 77,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'б', alt: 'Б'}, en: {main: ',', alt: '<'}},
+        size: 'small',
+        keyCode: 188,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: 'ю', alt: 'Ю'}, en: {main: '.', alt: '>'}},
+        size: 'small',
+        keyCode: 190,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: {ru: {main: '.', alt: ','}, en: {main: '/', alt: '?'}},
+        size: 'small',
+        keyCode: 191,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: 'Shift',
+        size: 'big',
+        keyCode: 16,
+        keyElement: null, side: 'right'
+      },
+      {
+        symbol: '⇧',
+        size: 'small',
+        keyCode: 38,
+        keyElement: null
+      }
     ],
     [
-      { symbol: 'Ctrl', size: 'big', keyCode: 17, keyElement: null, side: 'left' },
-      { symbol: 'Alt', size: 'big', keyCode: 18, keyElement: null, side: 'left' },
-      { symbol: ' ', size: 'extra-big', keyCode: 32, keyElement: null, action: (keyboard, key) => keyboard.addChar.call(keyboard, key) },
-      { symbol: 'Alt', size: 'big', keyCode: 18, keyElement: null, side: 'right' },
-      { symbol: 'Ctrl', size: 'big', keyCode: 17, keyElement: null, side: 'right' },
-      { symbol: '⇦', size: 'small', keyCode: 37, keyElement: null, action: (keyboard) => keyboard.leftHandler.call(keyboard) },
-      { symbol:  '⇩', size: 'small', keyCode: 40, keyElement: null },
-      { symbol:  '⇨', size: 'small', keyCode: 39, keyElement: null, action: (keyboard) => keyboard.rightHandler.call(keyboard) }
+      {
+        symbol: 'Ctrl',
+        size: 'big',
+        keyCode: 17,
+        keyElement: null, side: 'left' },
+      {
+        symbol: 'Alt',
+        size: 'big',
+        keyCode: 18,
+        keyElement: null, side: 'left' },
+      {
+        symbol: {ru: {main: ' ', alt: ' '}, en: {main: ' ', alt: ' '}},
+        size: 'extra-big',
+        keyCode: 32,
+        keyElement: null,
+        downAction: (keyboard, key) => keyboard.addChar.call(keyboard, key)
+      },
+      {
+        symbol: 'Alt',
+        size: 'big',
+        keyCode: 18,
+        keyElement: null, side: 'right' },
+      {
+        symbol: 'Ctrl',
+        size: 'big',
+        keyCode: 17,
+        keyElement: null, side: 'right' },
+      {
+        symbol: '⇦',
+        size: 'small',
+        keyCode: 37,
+        keyElement: null,
+        downAction: (keyboard) => keyboard.leftHandler.call(keyboard) },
+      {
+        symbol: '⇩',
+        size: 'small',
+        keyCode: 40,
+        keyElement: null },
+      {
+        symbol: '⇨',
+        size: 'small',
+        keyCode: 39,
+        keyElement: null,
+        downAction: (keyboard) => keyboard.rightHandler.call(keyboard) }
     ]
   ],
 
@@ -131,7 +494,7 @@ const Keyboard = {
         if (typeof letter.symbol === 'string') {
           keyDomElement.textContent = letter.symbol;
         } else {
-          keyDomElement.textContent = letter.symbol[this.lang];
+          keyDomElement.textContent = letter.symbol[this.lang].main;
         }
         letter.keyElement = keyDomElement;
 
@@ -141,7 +504,7 @@ const Keyboard = {
             event.preventDefault();
             letter.keyElement.classList.add("keyboard__key_pressed");
 
-            letter.action(this, letter);
+            letter.downAction(this, letter);
           }
 
         )
@@ -149,7 +512,9 @@ const Keyboard = {
         keyDomElement.addEventListener(
           'mouseup',
           (event) => {
+            event.preventDefault();
             letter.keyElement.classList.remove("keyboard__key_pressed");
+            letter.upAction?.(this, letter);
           }
         )
 
@@ -178,7 +543,7 @@ const Keyboard = {
 
           if (pressedKey) {
             pressedKey.keyElement.classList.add("keyboard__key_pressed");
-            pressedKey.action(this, pressedKey);
+            pressedKey.downAction(this, pressedKey);
             break;
           }
         }
@@ -255,28 +620,15 @@ const Keyboard = {
 
     key.keyElement.classList.toggle("keyboard__key_caps");
 
-    this.keysLayout.forEach((item) => {
-      item.forEach((char) => {
-
-        if (this.caps) {
-          if (typeof char.symbol[this.lang] === 'string') {
-
-            char.keyElement.textContent = char.symbol[this.lang].toUpperCase();
-          }
-        } else {
-          if (typeof char.symbol[this.lang] === 'string') {
-
-            char.keyElement.textContent = char.symbol[this.lang].toLowerCase();
-          }
-        }
-      })
-
-    })
+    this.changeKeysTextcontent();
 
   },
 
   shiftHandler: function () {
 
+    // this.caps = !this.caps;
+    this.shift = !this.shift;
+    this.changeKeysTextcontent();
   },
 
   tabHandler: function () {
@@ -305,8 +657,35 @@ const Keyboard = {
     let end = this.textField.selectionEnd;
     let char = letter.symbol[this.lang];
 
-    this.textField.value = this.textField.value.substring(0, start) + (this.caps ? char : char.toLowerCase()) + this.textField.value.substring(end, this.textField.value.length);
+    this.textField.value = this.textField.value.substring(0, start) + (this.caps ? char.alt : char.main) + this.textField.value.substring(end, this.textField.value.length);
     this.textField.setSelectionRange(start + 1, start + 1);
+  },
+
+  changeKeysTextcontent: function () {
+
+    this.keysLayout.forEach((item) => {
+      item.forEach((char) => {
+        if (typeof char.symbol !== 'string') {
+
+          if (this.caps && this.shift) {
+
+            char.keyElement.textContent = char.symbol[this.lang].alt.toLowerCase();
+
+          } else if (this.shift) {
+
+            char.keyElement.textContent = char.symbol[this.lang].alt;
+          } else if (this.caps) {
+
+            char.keyElement.textContent = char.symbol[this.lang].main.toUpperCase();
+          } else {
+
+            char.keyElement.textContent = char.symbol[this.lang].main;
+
+          }
+        }
+      })
+
+    })
   }
 };
 
