@@ -23,6 +23,7 @@
 }
 .keyboard__key {
   height: 50px;
+  vertical-align: top;
   box-sizing: border-box;
   border: none;
   border-radius: 5px;
