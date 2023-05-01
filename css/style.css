@@ -25,12 +25,13 @@
   height: 50px;
   vertical-align: top;
   box-sizing: border-box;
-  border: none;
+  border: 3px solid transparent;
   border-radius: 5px;
   background-color: rgba(255, 255, 255, 0.5);
   color: rgb(116, 116, 116);
   margin: 3px;
   cursor: pointer;
+  transition: border 0.3s;
 }
 .keyboard__key_small {
   width: 50px;

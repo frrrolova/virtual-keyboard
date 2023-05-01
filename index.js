@@ -4,8 +4,7 @@ const Keyboard = {
   textField: null,
   caps: false,
   shift: false,
-  ctrl: false,
-  alt: false,
+  controlKeys: [],
   lang: 'en',
   keysLayout: [
     [
@@ -410,16 +409,18 @@ const Keyboard = {
         size: 'big',
         keyCode: 'ControlLeft',
         keyElement: null,
-        side: 'left',
-        downAction: (keyboard, key) => keyboard.ctrlHandler.call(keyboard, key)
+        controlKey: 'ctrl',
+        downAction: (keyboard, key) => keyboard.ctrlHandler.call(keyboard, key),
+        keyUpAction: (keyboard, key) => keyboard.ctrlUpHandler.call(keyboard, key)
       },
       {
         symbol: 'Alt',
         size: 'big',
         keyCode: 'AltLeft',
         keyElement: null,
-        side: 'left',
-        downAction: (keyboard, key) => keyboard.altHandler.call(keyboard, key)
+        controlKey: 'alt',
+        downAction: (keyboard, key) => keyboard.altHandler.call(keyboard, key),
+        keyUpAction: (keyboard, key) => keyboard.altUpHandler.call(keyboard, key)
       },
       {
         symbol: {ru: {main: ' ', alt: ' '}, en: {main: ' ', alt: ' '}},
@@ -432,13 +433,19 @@ const Keyboard = {
         symbol: 'Alt',
         size: 'big',
         keyCode: 'AltRight',
-        keyElement: null, side: 'right'
+        keyElement: null,
+        controlKey: 'alt',
+        downAction: (keyboard, key) => keyboard.altHandler.call(keyboard, key),
+        keyUpAction:(keyboard, key) => keyboard.altUpHandler.call(keyboard, key)
       },
       {
         symbol: 'Ctrl',
         size: 'big',
         keyCode: 'ControlRight',
-        keyElement: null, side: 'right'
+        keyElement: null,
+        controlKey: 'ctrl',
+        downAction: (keyboard, key) => keyboard.ctrlHandler.call(keyboard, key),
+        keyUpAction: (keyboard, key) => keyboard.ctrlUpHandler.call(keyboard, key)
       },
       {
         symbol: '⇦',
@@ -529,7 +536,16 @@ const Keyboard = {
               this.findKeyObjectByKeyCode('ShiftLeft')?.keyElement.classList.remove("keyboard__key_active");
               this.findKeyObjectByKeyCode('ShiftRight')?.keyElement.classList.remove("keyboard__key_active");
             }
+
+            if (!keyObject.controlKey) {
+              this.controlKeys = [];
+              this.findKeyObjectByKeyCode('ControlLeft')?.keyElement.classList.remove("keyboard__key_active");
+              this.findKeyObjectByKeyCode('ControlRight')?.keyElement.classList.remove("keyboard__key_active");
+              this.findKeyObjectByKeyCode('AltLeft')?.keyElement.classList.remove("keyboard__key_active");
+              this.findKeyObjectByKeyCode('AltRight')?.keyElement.classList.remove("keyboard__key_active");
+            }
           }
+
         )
 
         keyDomElement.addEventListener(
@@ -554,8 +570,9 @@ const Keyboard = {
       'keydown',
       (event) => {
         event.preventDefault();
-        // We press shift repeatedly
-        if (event.repeat && (event.code === 'ShiftLeft' || event.code === 'ShiftRight')) {
+        // Prevent repeatedly occurring event handler
+        const noRepeatKeys = ['ShiftLeft', 'ShiftRight', 'AltLeft', 'AltRight', 'ControlLeft', 'ControlRight'];
+        if (event.repeat && noRepeatKeys.includes(event.code)) {
           return;
         }
 
@@ -645,31 +662,32 @@ const Keyboard = {
     this.changeKeysTextcontent();
   },
 
-  shiftUpHandler: function (key, ) {
+  shiftUpHandler: function (key) {
     this.shift = false;
     key.keyElement.classList.remove("keyboard__key_active");
     this.changeKeysTextcontent();
   },
 
-  ctrlHandler: function () {
-    this.ctrl = !this.ctrl;
+  ctrlHandler: function (key) {
 
-    if (this.alt) {
-      this.lang === 'en' ? this.lang = 'ru' : this.lang = 'en';
-      this.changeKeysTextcontent();
-      this.ctrl = false;
-      this.alt = false;
-    }
+    this.controlKeysHandler(key);
   },
 
-  altHandler: function () {
-    this.alt = !this.alt;
-    if (this.ctrl) {
-      this.lang === 'en' ? this.lang = 'ru' : this.lang = 'en';
-      this.changeKeysTextcontent();
-      this.ctrl = false;
-      this.alt = false;
-    }
+  ctrlUpHandler: function (key) {
+
+    this.controlKeys.splice(this.controlKeys.indexOf(key), 1);
+    key.keyElement.classList.remove("keyboard__key_active");
+  },
+
+  altHandler: function (key) {
+
+    this.controlKeysHandler(key);
+  },
+
+  altUpHandler: function (key) {
+
+    this.controlKeys.splice(this.controlKeys.indexOf(key), 1);
+    key.keyElement.classList.remove("keyboard__key_active");
   },
 
   tabHandler: function () {
@@ -802,6 +820,48 @@ const Keyboard = {
         return foundedKeyObject;
       }
     }
+  },
+
+  controlKeysHandler: function (keyObject) {
+
+    const sameControlKeyObject = this.controlKeys.find((item) => item.controlKey === keyObject.controlKey);
+
+    if (!sameControlKeyObject) {
+      this.controlKeys.push(keyObject);
+      keyObject.keyElement.classList.add("keyboard__key_active");
+    } else {
+      if (sameControlKeyObject.keyCode === keyObject.keyCode) {
+        this.controlKeys.splice(this.controlKeys.indexOf(keyObject), 1);
+        keyObject.keyElement.classList.remove("keyboard__key_active");
+      } else {
+        keyObject.keyElement.classList.add("keyboard__key_active");
+        sameControlKeyObject.keyElement.classList.remove("keyboard__key_active");
+        this.controlKeys.splice(this.controlKeys.indexOf(sameControlKeyObject), 1);
+        this.controlKeys.push(keyObject);
+      }
+    }
+
+    if (this.controlKeys.length === 2) {
+
+      if (this.controlKeys.every((element) => element.controlKey === 'ctrl' || element.controlKey === 'alt')) {
+        keyObject.keyElement.classList.add("keyboard__key_active");
+        this.changeLang();
+
+        setTimeout(() => {
+          this.findKeyObjectByKeyCode('ControlLeft')?.keyElement.classList.remove("keyboard__key_active");
+          this.findKeyObjectByKeyCode('ControlRight')?.keyElement.classList.remove("keyboard__key_active");
+          this.findKeyObjectByKeyCode('AltLeft')?.keyElement.classList.remove("keyboard__key_active");
+          this.findKeyObjectByKeyCode('AltRight')?.keyElement.classList.remove("keyboard__key_active");
+        }, 300)
+
+      }
+    }
+  },
+
+  changeLang: function () {
+    this.lang = this.lang === 'en' ?  'ru' : 'en';
+    this.changeKeysTextcontent();
+    this.controlKeys = [];
   }
 };
 
