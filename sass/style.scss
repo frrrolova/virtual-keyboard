@@ -1,0 +1,90 @@
+.container {
+  text-align: center;
+  position: relative;
+}
+
+.title {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 700;
+  color: rgb(116, 116, 116);
+}
+
+.textarea {
+  outline: none;
+  font-family: 'Roboto', sans-serif;
+  box-shadow: 0 0 0 0.25rem rgba(13,110,253,0);
+  border-radius: 10px;
+  padding: 5px;
+  transition: box-shadow 0.1s linear, border-color 0.1s linear;
+
+  &::placeholder {
+    color: rgba(116, 116, 116, 0.47);
+  }
+
+  &:focus {
+    box-shadow: 0 0 0 0.25rem rgba(13,110,253,.25);
+    border-color: rgba(13,110,253,0.75);
+  }
+}
+
+.keyboard {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: rgb(226, 226, 224);
+  -webkit-box-shadow: 1px 8px 9px 8px rgba(196, 200, 204, 0.2);
+  -moz-box-shadow: 1px 8px 9px 8px rgba(196, 200, 204, 0.2);
+  box-shadow: 1px 8px 9px 8px rgba(196, 200, 204, 0.2);
+
+  &__note {
+    padding-bottom: 15px;
+    font-family: 'Roboto', sans-serif;
+    color: rgb(133, 132, 132);
+  }
+
+  &__row {
+    display: inline-block;
+  }
+
+  &__key {
+    height: 50px;
+    vertical-align: top;
+    box-sizing: border-box;
+    border: 3px solid transparent;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.5);
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+    color: rgb(116, 116, 116);
+    margin: 3px;
+    cursor: pointer;
+    transition: border-color 0.1s linear, border-radius 0.1s linear;
+
+    &_small {
+      width: 50px;
+    }
+
+    &_big {
+      width: 100px;
+    }
+
+    &_extra-big {
+      width: 342px;
+    }
+
+    &_pressed {
+      background-color: rgba(255, 255, 255, 0.8);
+      border-radius: 15px;
+    }
+
+    &_active {
+      border: 3px solid;
+      border-color: rgba(13,110,253,0.5);
+      background-color: rgba(255, 255, 255, 0.8);
+    }
+
+  }
+
+}
