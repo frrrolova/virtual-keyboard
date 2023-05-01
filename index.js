@@ -5,7 +5,7 @@ const Keyboard = {
   caps: false,
   shift: false,
   controlKeys: [],
-  lang: 'en',
+  lang: null,
   keysLayout: [
     [
       {
@@ -472,9 +472,14 @@ const Keyboard = {
   ],
 
   init: function () {
+    this.initLang();
     this.drawBasicLayout();
     this.drawKeys();
     this.initKeyboardEventListeners();
+  },
+
+  initLang: function () {
+    this.lang = localStorage.getItem('lang') || 'en';
   },
 
   drawBasicLayout: function () {
@@ -862,6 +867,7 @@ const Keyboard = {
     this.lang = this.lang === 'en' ?  'ru' : 'en';
     this.changeKeysTextcontent();
     this.controlKeys = [];
+    localStorage.setItem('lang', this.lang)
   }
 };
 
