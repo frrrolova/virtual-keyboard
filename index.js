@@ -658,13 +658,18 @@ class Keyboard {
   deleteHandler() {
     const start = this.textField.selectionStart;
     const end = this.textField.selectionEnd;
-    const { value } = this.textField;
 
     if (start === end) {
-      this.textField.value = value.substring(0, start) + value.substring(end + 1, value.length);
+      const leftString = this.textField.value.substring(0, start);
+      const rightString = this.textField.value.substring(end + 1, this.textField.value.length);
+
+      this.textField.value = leftString + rightString;
     }
 
-    this.textField.value = value.substring(0, start) + value.substring(end, value.length);
+    const leftString = this.textField.value.substring(0, start);
+    const rightString = this.textField.value.substring(end, this.textField.value.length);
+
+    this.textField.value = leftString + rightString;
 
     this.textField.setSelectionRange(start, start);
   }
@@ -672,9 +677,10 @@ class Keyboard {
   enterHandler() {
     const start = this.textField.selectionStart;
     const end = this.textField.selectionEnd;
-    const { value } = this.textField;
+    const leftString = this.textField.value.substring(0, start);
+    const rightString = this.textField.value.substring(end, this.textField.value.length);
 
-    this.textField.value = `${value.substring(0, start)}\n${value.substring(end, value.length)}`;
+    this.textField.value = `${leftString}\n${rightString}`;
 
     this.textField.setSelectionRange(start + 1, start + 1);
   }
