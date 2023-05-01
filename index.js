@@ -711,6 +711,10 @@ const Keyboard = {
   leftHandler: function () {
     let start = this.textField.selectionStart;
 
+    if (start === 0) {
+      return;
+    }
+
     this.textField.setSelectionRange(start - 1, start - 1);
   },
 
@@ -758,11 +762,11 @@ const Keyboard = {
 
     while (dummyPosition > arrOfStrings[i].length) {
       dummyPosition = dummyPosition - arrOfStrings[i].length - 1;
-      sum = arrOfStrings[i].length + 1;
+      sum = sum + arrOfStrings[i].length + 1;
       i = i + 1;
     }
 
-    if ((arrOfStrings[i] + 1) === (arrOfStrings.length - 1)) {
+    if (i === (arrOfStrings.length - 1)) {
       newPosition = sum + arrOfStrings[i].length;
     } else if (dummyPosition > arrOfStrings[i + 1].length) {
       newPosition = sum + arrOfStrings[i].length + arrOfStrings[i + 1].length + 1;
