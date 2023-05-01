@@ -401,7 +401,8 @@ const Keyboard = {
         symbol: '⇧',
         size: 'small',
         keyCode: 'ArrowUp',
-        keyElement: null
+        keyElement: null,
+        downAction: (keyboard) => keyboard.upHandler.call(keyboard)
       }
     ],
     [
@@ -436,29 +437,35 @@ const Keyboard = {
         symbol: 'Alt',
         size: 'big',
         keyCode: 'AltRight',
-        keyElement: null, side: 'right' },
+        keyElement: null, side: 'right'
+      },
       {
         symbol: 'Ctrl',
         size: 'big',
         keyCode: 'ControlRight',
-        keyElement: null, side: 'right' },
+        keyElement: null, side: 'right'
+      },
       {
         symbol: '⇦',
         size: 'small',
         keyCode: 'ArrowLeft',
         keyElement: null,
-        downAction: (keyboard) => keyboard.leftHandler.call(keyboard) },
+        downAction: (keyboard) => keyboard.leftHandler.call(keyboard)
+      },
       {
         symbol: '⇩',
         size: 'small',
         keyCode: 'ArrowDown',
-        keyElement: null },
+        keyElement: null,
+        downAction: (keyboard) => keyboard.downHandler.call(keyboard),
+      },
       {
         symbol: '⇨',
         size: 'small',
         keyCode: 'ArrowRight',
         keyElement: null,
-        downAction: (keyboard) => keyboard.rightHandler.call(keyboard) }
+        downAction: (keyboard) => keyboard.rightHandler.call(keyboard)
+      }
     ]
   ],
 
@@ -711,6 +718,58 @@ const Keyboard = {
     let start = this.textField.selectionStart;
 
     this.textField.setSelectionRange(start + 1, start + 1);
+  },
+
+  upHandler: function () {
+    let position = this.textField.selectionStart;
+    let arrOfStrings = this.textField.value.split('\n');
+    let sum = 0;
+    let prevSum = 0;
+    let i = 0;
+    let dummyPosition = position;
+    let newPosition;
+
+    while (dummyPosition > arrOfStrings[i].length) {
+      dummyPosition = dummyPosition - arrOfStrings[i].length - 1;
+      prevSum = sum;
+      sum = sum + arrOfStrings[i].length + 1;
+      i = i + 1;
+    }
+
+    if (i === 0) {
+      newPosition = 0;
+    } else if (dummyPosition > arrOfStrings[i - 1].length) {
+      newPosition = sum - 1;
+    } else {
+      newPosition = prevSum + dummyPosition;
+    }
+
+    this.textField.setSelectionRange(newPosition, newPosition);
+  },
+
+  downHandler: function () {
+    let position = this.textField.selectionStart;
+    let arrOfStrings = this.textField.value.split('\n');
+    let i = 0;
+    let sum = 0;
+    let dummyPosition = position;
+    let newPosition;
+
+
+    while (dummyPosition > arrOfStrings[i].length) {
+      dummyPosition = dummyPosition - arrOfStrings[i].length - 1;
+      sum = arrOfStrings[i].length + 1;
+      i = i + 1;
+    }
+
+    if ((arrOfStrings[i] + 1) === (arrOfStrings.length - 1)) {
+      newPosition = sum + arrOfStrings[i].length;
+    } else if (dummyPosition > arrOfStrings[i + 1].length) {
+      newPosition = sum + arrOfStrings[i].length + arrOfStrings[i + 1].length + 1;
+    } else {
+      newPosition = sum + arrOfStrings[i].length + dummyPosition + 1;
+    }
+    this.textField.setSelectionRange(newPosition, newPosition);
   },
 
   addChar: function (keyObject) {
