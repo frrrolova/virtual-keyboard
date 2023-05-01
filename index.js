@@ -411,9 +411,7 @@ const Keyboard = {
         keyCode: 'ControlLeft',
         keyElement: null,
         side: 'left',
-        downAction: (keyboard, key) => keyboard.ctrlHandler.call(keyboard, key),
-        upAction: (keyboard, key) => keyboard.ctrlHandler.call(keyboard, key),
-        dobleClickAction: (keyboard, key) => keyboard.ctrlHandler.call(keyboard, key)
+        downAction: (keyboard, key) => keyboard.ctrlHandler.call(keyboard, key)
       },
       {
         symbol: 'Alt',
@@ -421,9 +419,7 @@ const Keyboard = {
         keyCode: 'AltLeft',
         keyElement: null,
         side: 'left',
-        downAction: (keyboard, key) => keyboard.altHandler.call(keyboard, key),
-        upAction: (keyboard, key) => keyboard.altHandler.call(keyboard, key),
-        dobleClickAction: (keyboard, key) => keyboard.altHandler.call(keyboard, key)
+        downAction: (keyboard, key) => keyboard.altHandler.call(keyboard, key)
       },
       {
         symbol: {ru: {main: ' ', alt: ' '}, en: {main: ' ', alt: ' '}},
@@ -533,9 +529,7 @@ const Keyboard = {
               this.findKeyObjectByKeyCode('ShiftLeft')?.keyElement.classList.remove("keyboard__key_active");
               this.findKeyObjectByKeyCode('ShiftRight')?.keyElement.classList.remove("keyboard__key_active");
             }
-
           }
-
         )
 
         keyDomElement.addEventListener(
@@ -565,17 +559,11 @@ const Keyboard = {
           return;
         }
 
-        for (let i = 0; i < this.keysLayout.length; i++) {
-          const item = this.keysLayout[i];
+        let keyObject = this.findKeyObjectByKeyCode(event.code);
 
-          const pressedKey = item.find((letter) => event.code === letter.keyCode);
+        keyObject.keyElement.classList.add("keyboard__key_pressed");
+        keyObject.downAction(this, keyObject);
 
-          if (pressedKey) {
-            pressedKey.keyElement.classList.add("keyboard__key_pressed");
-            pressedKey.downAction(this, pressedKey);
-            break;
-          }
-        }
       }
     )
 
@@ -583,17 +571,12 @@ const Keyboard = {
       'keyup',
       (event) => {
         event.preventDefault();
-        for (let i = 0; i < this.keysLayout.length; i++) {
-          const item = this.keysLayout[i];
 
-          const pressedKey = item.find((keyObject) => event.code === keyObject.keyCode);
-          if (pressedKey) {
-            pressedKey.keyElement.classList.remove("keyboard__key_pressed");
-            pressedKey.upAction?.(this, pressedKey);
-            pressedKey.keyUpAction?.(this, pressedKey);
-            break;
-          }
-        }
+        let keyObject = this.findKeyObjectByKeyCode(event.code);
+
+        keyObject.keyElement.classList.remove("keyboard__key_pressed");
+        keyObject.upAction?.(this, keyObject);
+        keyObject.keyUpAction?.(this, keyObject);
 
       }
     )
