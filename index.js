@@ -105,7 +105,8 @@ const Keyboard = {
         size: 'big',
         keyCode: 'Backspace',
         keyElement: null,
-        downAction: (keyboard) => keyboard.backspaceHandler() }
+        downAction: (keyboard) => keyboard.backspaceHandler()
+      }
     ],
     [
       {
@@ -113,7 +114,8 @@ const Keyboard = {
         size: 'big',
         keyCode: 'Tab',
         keyElement: null,
-        downAction: (keyboard) => keyboard.tabHandler() },
+        downAction: (keyboard) => keyboard.tabHandler()
+      },
       {
         symbol: {ru: {main: 'й', alt: 'Й'}, en: {main: 'q', alt: 'Q'}},
         size: 'small',
@@ -302,7 +304,8 @@ const Keyboard = {
         size: 'big',
         keyCode: 'Enter',
         keyElement: null,
-        downAction: (keyboard) => keyboard.enterHandler() }
+        downAction: (keyboard) => keyboard.enterHandler()
+      }
     ],
     [
       {
@@ -310,7 +313,8 @@ const Keyboard = {
         size: 'big',
         keyCode: 'ShiftLeft',
         keyElement: null,
-        downAction: (keyboard, key) => keyboard.shiftHandler.call(keyboard, key),
+        downAction: (keyboard, key) => keyboard.shiftDownHandler.call(keyboard, key),
+        keyUpAction: (keyboard, key) => keyboard.shiftUpHandler.call(keyboard, key)
 
       },
       {
@@ -388,7 +392,8 @@ const Keyboard = {
         size: 'big',
         keyCode: 'ShiftRight',
         keyElement: null,
-        downAction: (keyboard, key) => keyboard.shiftHandler.call(keyboard, key),
+        downAction: (keyboard, key) => keyboard.shiftDownHandler.call(keyboard, key),
+        keyUpAction: (keyboard, key) => keyboard.shiftUpHandler.call(keyboard, key)
 
       },
       {
@@ -544,14 +549,6 @@ const Keyboard = {
           }
         )
 
-        // keyDomElement.addEventListener(
-        //   'dblclick',
-        //   (event) => {
-        //     keyObject.keyElement.classList.toggle("keyboard__key_pressed");
-        //     keyObject.dobleClickAction?.(this, keyObject);
-        //   }
-        // )
-
         row.append(keyDomElement);
       })
     })
@@ -593,6 +590,7 @@ const Keyboard = {
           if (pressedKey) {
             pressedKey.keyElement.classList.remove("keyboard__key_pressed");
             pressedKey.upAction?.(this, pressedKey);
+            pressedKey.keyUpAction?.(this, pressedKey);
             break;
           }
         }
@@ -657,10 +655,16 @@ const Keyboard = {
 
   },
 
-  shiftHandler: function (key) {
+  shiftDownHandler: function (key) {
 
     this.shift = !this.shift;
     key.keyElement.classList.toggle("keyboard__key_active");
+    this.changeKeysTextcontent();
+  },
+
+  shiftUpHandler: function (key, ) {
+    this.shift = false;
+    key.keyElement.classList.remove("keyboard__key_active");
     this.changeKeysTextcontent();
   },
 
