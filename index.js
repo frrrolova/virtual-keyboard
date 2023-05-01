@@ -490,6 +490,9 @@ const Keyboard = {
     let keyboard = document.createElement('div');
     let wrapper = document.createElement('div');
     this.keysWrapper = wrapper;
+    let note = document.createElement('div');
+    let noteItemOS = document.createElement('div');
+    let noteItemLang = document.createElement('div');
 
     container.classList.add("container");
     title.classList.add("title");
@@ -503,8 +506,15 @@ const Keyboard = {
     textarea.setAttribute('autofocus', '');
     keyboard.classList.add("keyboard");
     wrapper.classList.add("keyboard__wrapper");
+    note.classList.add("keyboard__note");
+    noteItemOS.classList.add("keyboard__note-item");
+    noteItemOS.textContent = 'This Keyboard created in Windows OS';
+    noteItemLang.textContent = 'To change current language, use Ctrl + Alt';
 
     container.append(title, textarea, keyboard);
+    keyboard.append(note);
+    note.append(noteItemOS);
+    note.append(noteItemLang);
     keyboard.append(wrapper);
 
     document.body.append(container);

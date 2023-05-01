@@ -1,5 +1,4 @@
 .container {
-  height: 100vh;
   text-align: center;
   position: relative;
 }
@@ -22,6 +21,15 @@
   -webkit-box-shadow: 1px 8px 9px 8px rgba(196, 200, 204, 0.2);
   -moz-box-shadow: 1px 8px 9px 8px rgba(196, 200, 204, 0.2);
   box-shadow: 1px 8px 9px 8px rgba(196, 200, 204, 0.2);
+
+  &__note {
+    padding-bottom: 15px;
+    color: rgb(133, 132, 132);
+  }
+
+  &__row {
+    display: inline-block;
+  }
 
   &__key {
     height: 50px;
