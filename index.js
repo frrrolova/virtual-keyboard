@@ -524,6 +524,14 @@ class Keyboard {
     keyboard.append(wrapper);
 
     document.body.append(container);
+
+    keyboard.addEventListener(
+      'mousedown',
+      (event) => {
+        event.preventDefault();
+        event.stopImmediatePropagation();
+      },
+    );
   }
 
   drawKeys() {
@@ -576,6 +584,14 @@ class Keyboard {
             keyObject.upAction?.(this, keyObject);
           },
         );
+
+        window.addEventListener('mouseup', () => {
+          this.keysLayout.forEach((layoutRow) => {
+            layoutRow.forEach((kObj) => {
+              kObj.keyElement.classList.remove('keyboard__key_pressed');
+            });
+          });
+        });
 
         row.append(keyDomElement);
       });
