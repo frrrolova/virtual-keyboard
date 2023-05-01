@@ -6,10 +6,7 @@ const Keyboard = {
   shift: false,
   ctrl: false,
   alt: false,
-  specialSymbol: '',
   lang: 'en',
-  downTimerId: null,
-  upTimerId: null,
   keysLayout: [
     [
       {
@@ -313,10 +310,8 @@ const Keyboard = {
         size: 'big',
         keyCode: 'ShiftLeft',
         keyElement: null,
-        side: 'left',
         downAction: (keyboard, key) => keyboard.shiftHandler.call(keyboard, key),
-        upAction: (keyboard, key) => keyboard.shiftHandler.call(keyboard, key),
-        dobleClickAction: (keyboard, key) => keyboard.shiftHandler.call(keyboard, key)
+
       },
       {
         symbol: {ru: {main: 'я', alt: 'Я'}, en: {main: 'z', alt: 'Z'}},
@@ -392,10 +387,9 @@ const Keyboard = {
         symbol: 'Shift',
         size: 'big',
         keyCode: 'ShiftRight',
-        keyElement: null, side: 'right',
+        keyElement: null,
         downAction: (keyboard, key) => keyboard.shiftHandler.call(keyboard, key),
-        upAction: (keyboard, key) => keyboard.shiftHandler.call(keyboard, key),
-        dobleClickAction: (keyboard, key) => keyboard.shiftHandler.call(keyboard, key)
+
       },
       {
         symbol: '⇧',
@@ -523,19 +517,17 @@ const Keyboard = {
           'mousedown',
           (event) => {
             event.preventDefault();
-            
-            if (this.downTimerId) {
-              clearTimeout(this.downTimerId);
-              this.downTimerId = null;
-            }
-            
-            
-            this.downTimerId = setTimeout(() => {
-              keyObject.keyElement.classList.add("keyboard__key_pressed");
 
-              keyObject.downAction(this, keyObject);
-              this.downTimerId = null;
-            }, 300)
+            keyObject.keyElement.classList.add("keyboard__key_pressed");
+            keyObject.downAction(this, keyObject);
+
+            if (this.shift && keyObject.symbol !== 'Shift') {
+              this.shift = false;
+
+              this.changeKeysTextcontent();
+              this.findKeyObjectByKeyCode('ShiftLeft')?.keyElement.classList.remove("keyboard__key_active");
+              this.findKeyObjectByKeyCode('ShiftRight')?.keyElement.classList.remove("keyboard__key_active");
+            }
 
           }
 
@@ -545,17 +537,10 @@ const Keyboard = {
           'mouseup',
           (event) => {
             event.preventDefault();
-            if (this.upTimerId) {
-              clearTimeout(this.upTimerId);
-              this.upTimerId = null;
-            }
 
-            this.upTimerId = setTimeout(() => {
-              keyObject.keyElement.classList.remove("keyboard__key_pressed");
-              keyObject.upAction?.(this, keyObject);
-            }, 300);
+            keyObject.keyElement.classList.remove("keyboard__key_pressed");
+            keyObject.upAction?.(this, keyObject);
 
-           
           }
         )
 
@@ -604,7 +589,7 @@ const Keyboard = {
         for (let i = 0; i < this.keysLayout.length; i++) {
           const item = this.keysLayout[i];
 
-          const pressedKey = item.find((letter) => event.code === letter.keyCode);
+          const pressedKey = item.find((keyObject) => event.code === keyObject.keyCode);
           if (pressedKey) {
             pressedKey.keyElement.classList.remove("keyboard__key_pressed");
             pressedKey.upAction?.(this, pressedKey);
@@ -666,15 +651,16 @@ const Keyboard = {
 
     this.caps = !this.caps;
 
-    key.keyElement.classList.toggle("keyboard__key_caps");
+    key.keyElement.classList.toggle("keyboard__key_active");
 
     this.changeKeysTextcontent();
 
   },
 
-  shiftHandler: function () {
+  shiftHandler: function (key) {
 
     this.shift = !this.shift;
+    key.keyElement.classList.toggle("keyboard__key_active");
     this.changeKeysTextcontent();
   },
 
@@ -783,6 +769,7 @@ const Keyboard = {
 
     this.textField.value = this.textField.value.substring(0, start) + char + this.textField.value.substring(end, this.textField.value.length);
     this.textField.setSelectionRange(start + 1, start + 1);
+
   },
 
   changeKeysTextcontent: function () {
@@ -816,6 +803,18 @@ const Keyboard = {
 
     }
 
+  },
+
+  findKeyObjectByKeyCode: function (keyCode) {
+
+    for (let i = 0; i < this.keysLayout.length; i++) {
+      const item = this.keysLayout[i];
+
+      const foundedKeyObject = item.find((keyObject) => keyCode === keyObject.keyCode);
+      if (foundedKeyObject) {
+        return foundedKeyObject;
+      }
+    }
   }
 };
 
