@@ -1,12 +1,12 @@
-const Keyboard = {
+class Keyboard {
 
-  keysWrapper: null,
-  textField: null,
-  caps: false,
-  shift: false,
-  controlKeys: [],
-  lang: null,
-  keysLayout: [
+  keysWrapper = null;
+  textField = null;
+  caps = false;
+  shift = false;
+  controlKeys = [];
+  lang = null;
+  keysLayout = [
     [
       {
         symbol: {ru: {main: 'ё', alt: 'Ё'}, en: {main: '`', alt: '~'}},
@@ -469,20 +469,20 @@ const Keyboard = {
         downAction: (keyboard) => keyboard.rightHandler.call(keyboard)
       }
     ]
-  ],
+  ];
 
-  init: function () {
+  constructor() {
     this.initLang();
     this.drawBasicLayout();
     this.drawKeys();
     this.initKeyboardEventListeners();
-  },
+  };
 
-  initLang: function () {
+  initLang() {
     this.lang = localStorage.getItem('lang') || 'en';
-  },
+  };
 
-  drawBasicLayout: function () {
+  drawBasicLayout() {
     let container = document.createElement('div');
     let title = document.createElement('h1');
     let textarea = document.createElement('textarea');
@@ -519,9 +519,9 @@ const Keyboard = {
 
     document.body.append(container);
 
-  },
+  };
 
-  drawKeys: function () {
+  drawKeys() {
     this.keysLayout.forEach((item) => {
 
       let row = document.createElement('div');
@@ -577,9 +577,9 @@ const Keyboard = {
         row.append(keyDomElement);
       })
     })
-  },
+  };
 
-  initKeyboardEventListeners: function () {
+  initKeyboardEventListeners() {
 
     window.addEventListener(
       'keydown',
@@ -612,9 +612,9 @@ const Keyboard = {
 
       }
     )
-  },
+  };
 
-  backspaceHandler: function () {
+  backspaceHandler() {
     let start = this.textField.selectionStart;
     let end = this.textField.selectionEnd;
 
@@ -634,9 +634,9 @@ const Keyboard = {
 
       this.textField.setSelectionRange(start, start);
     }
-  },
+  };
 
-  deleteHandler: function () {
+  deleteHandler() {
     let start = this.textField.selectionStart;
     let end = this.textField.selectionEnd;
 
@@ -648,9 +648,9 @@ const Keyboard = {
     this.textField.value = this.textField.value.substring(0, start) + this.textField.value.substring(end, this.textField.value.length);
 
     this.textField.setSelectionRange(start, start);
-  },
+  };
 
-  enterHandler: function () {
+  enterHandler() {
     let start = this.textField.selectionStart;
     let end = this.textField.selectionEnd;
 
@@ -658,9 +658,9 @@ const Keyboard = {
 
     this.textField.setSelectionRange(start + 1, start + 1);
 
-  },
+  };
 
-  capsHandler: function (key) {
+  capsHandler(key) {
 
     this.caps = !this.caps;
 
@@ -668,53 +668,53 @@ const Keyboard = {
 
     this.changeKeysTextcontent();
 
-  },
+  };
 
-  shiftDownHandler: function (key) {
+  shiftDownHandler(key) {
 
     this.shift = !this.shift;
     key.keyElement.classList.toggle("keyboard__key_active");
     this.changeKeysTextcontent();
-  },
+  };
 
-  shiftUpHandler: function (key) {
+  shiftUpHandler(key) {
     this.shift = false;
     key.keyElement.classList.remove("keyboard__key_active");
     this.changeKeysTextcontent();
-  },
+  };
 
-  ctrlHandler: function (key) {
+  ctrlHandler(key) {
 
     this.controlKeysHandler(key);
-  },
+  };
 
-  ctrlUpHandler: function (key) {
+  ctrlUpHandler(key) {
 
     this.controlKeys.splice(this.controlKeys.indexOf(key), 1);
     key.keyElement.classList.remove("keyboard__key_active");
-  },
+  };
 
-  altHandler: function (key) {
+  altHandler(key) {
 
     this.controlKeysHandler(key);
-  },
+  };
 
-  altUpHandler: function (key) {
+  altUpHandler(key) {
 
     this.controlKeys.splice(this.controlKeys.indexOf(key), 1);
     key.keyElement.classList.remove("keyboard__key_active");
-  },
+  };
 
-  tabHandler: function () {
+  tabHandler() {
     let start = this.textField.selectionStart;
     let end = this.textField.selectionEnd;
     let char = '\t';
 
     this.textField.value = this.textField.value.substring(0, start) + (this.caps ? char.toUpperCase() : char) + this.textField.value.substring(end, this.textField.value.length);
     this.textField.setSelectionRange(start + 1, start + 1);
-  },
+  };
 
-  leftHandler: function () {
+  leftHandler() {
     let start = this.textField.selectionStart;
 
     if (start === 0) {
@@ -722,15 +722,15 @@ const Keyboard = {
     }
 
     this.textField.setSelectionRange(start - 1, start - 1);
-  },
+  };
 
-  rightHandler: function () {
+  rightHandler() {
     let start = this.textField.selectionStart;
 
     this.textField.setSelectionRange(start + 1, start + 1);
-  },
+  };
 
-  upHandler: function () {
+  upHandler() {
     let position = this.textField.selectionStart;
     let arrOfStrings = this.textField.value.split('\n');
     let sum = 0;
@@ -755,16 +755,15 @@ const Keyboard = {
     }
 
     this.textField.setSelectionRange(newPosition, newPosition);
-  },
+  };
 
-  downHandler: function () {
+  downHandler() {
     let position = this.textField.selectionStart;
     let arrOfStrings = this.textField.value.split('\n');
     let i = 0;
     let sum = 0;
     let dummyPosition = position;
     let newPosition;
-
 
     while (dummyPosition > arrOfStrings[i].length) {
       dummyPosition = dummyPosition - arrOfStrings[i].length - 1;
@@ -780,9 +779,9 @@ const Keyboard = {
       newPosition = sum + arrOfStrings[i].length + dummyPosition + 1;
     }
     this.textField.setSelectionRange(newPosition, newPosition);
-  },
+  };
 
-  addChar: function (keyObject) {
+  addChar(keyObject) {
     let start = this.textField.selectionStart;
     let end = this.textField.selectionEnd;
     let char = this.getCharSymbol(keyObject); // string
@@ -790,9 +789,9 @@ const Keyboard = {
     this.textField.value = this.textField.value.substring(0, start) + char + this.textField.value.substring(end, this.textField.value.length);
     this.textField.setSelectionRange(start + 1, start + 1);
 
-  },
+  };
 
-  changeKeysTextcontent: function () {
+  changeKeysTextcontent() {
 
     this.keysLayout.forEach((item) => {
       item.forEach((keyObject) => {
@@ -800,9 +799,9 @@ const Keyboard = {
       })
 
     })
-  },
+  };
 
-  getCharSymbol: function (keyObject) {
+  getCharSymbol(keyObject) {
     if (typeof keyObject.symbol === 'string') {
       return keyObject.symbol;
     }
@@ -823,9 +822,9 @@ const Keyboard = {
 
     }
 
-  },
+  };
 
-  findKeyObjectByKeyCode: function (keyCode) {
+  findKeyObjectByKeyCode(keyCode) {
 
     for (let i = 0; i < this.keysLayout.length; i++) {
       const item = this.keysLayout[i];
@@ -835,9 +834,9 @@ const Keyboard = {
         return foundedKeyObject;
       }
     }
-  },
+  };
 
-  controlKeysHandler: function (keyObject) {
+  controlKeysHandler(keyObject) {
 
     const sameControlKeyObject = this.controlKeys.find((item) => item.controlKey === keyObject.controlKey);
 
@@ -871,20 +870,14 @@ const Keyboard = {
 
       }
     }
-  },
+  };
 
-  changeLang: function () {
+  changeLang() {
     this.lang = this.lang === 'en' ?  'ru' : 'en';
     this.changeKeysTextcontent();
     this.controlKeys = [];
     localStorage.setItem('lang', this.lang)
-  }
+  };
 };
 
-Keyboard.init();
-
-// let a = {};
-// a.h = Keyboard.backspaceHandler;
-// a.h.call(Keyboard);
-// Keyboard.backspaceHandler();
-// a.h();
+new Keyboard();
