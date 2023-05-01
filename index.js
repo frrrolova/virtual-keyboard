@@ -508,7 +508,7 @@ class Keyboard {
     textarea.setAttribute('name', 'text');
     textarea.setAttribute('cols', '150');
     textarea.setAttribute('rows', '10');
-    textarea.setAttribute('placeholder', 'type something');
+    textarea.setAttribute('placeholder', 'Type something');
     textarea.setAttribute('autofocus', '');
     keyboard.classList.add('keyboard');
     wrapper.classList.add('keyboard__wrapper');

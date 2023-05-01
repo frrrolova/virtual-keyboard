@@ -4,11 +4,28 @@
 }
 
 .title {
-  color: rgb(5, 70, 5);
+  font-family: "Roboto", sans-serif;
+  font-weight: 700;
+  color: rgb(116, 116, 116);
 }
 
 .textarea {
   outline: none;
+  font-family: "Roboto", sans-serif;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0);
+  border-radius: 10px;
+  padding: 5px;
+  transition: box-shadow 0.1s linear, border-color 0.1s linear;
+}
+.textarea::-moz-placeholder {
+  color: rgba(116, 116, 116, 0.47);
+}
+.textarea::placeholder {
+  color: rgba(116, 116, 116, 0.47);
+}
+.textarea:focus {
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+  border-color: rgba(13, 110, 253, 0.75);
 }
 
 .keyboard {
@@ -22,6 +39,7 @@
 }
 .keyboard__note {
   padding-bottom: 15px;
+  font-family: "Roboto", sans-serif;
   color: rgb(133, 132, 132);
 }
 .keyboard__row {
@@ -34,10 +52,12 @@
   border: 3px solid transparent;
   border-radius: 5px;
   background-color: rgba(255, 255, 255, 0.5);
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
   color: rgb(116, 116, 116);
   margin: 3px;
   cursor: pointer;
-  transition: border 0.3s;
+  transition: border-color 0.1s linear, border-radius 0.1s linear;
 }
 .keyboard__key_small {
   width: 50px;
@@ -50,8 +70,10 @@
 }
 .keyboard__key_pressed {
   background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
 }
 .keyboard__key_active {
-  border: 3px solid rgb(45, 248, 45);
+  border: 3px solid;
+  border-color: rgba(13, 110, 253, 0.5);
   background-color: rgba(255, 255, 255, 0.8);
 }/*# sourceMappingURL=style.css.map */
